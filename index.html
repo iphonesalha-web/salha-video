@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="صالحة فيديو">
+<meta name="theme-color" content="#0b1220">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<title>صالحة فيديو</title>
+<style>
+:root{
+  --bg:#f3f5f9; --card:#ffffff; --text:#0f172a; --muted:#64748b; --line:#e2e8f0;
+  --field:#eef1f6; --accent:#0d9488; --accent2:#10b981; --danger:#e11d48; --audio:#6366f1;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0b1220; --card:#131c2e; --text:#e5e9f0; --muted:#8b97ab; --line:#223047;
+    --field:#0e1626; --accent:#14b8a6; --accent2:#34d399; --danger:#fb7185; --audio:#818cf8; }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text)}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Arabic","Geeza Pro",system-ui,sans-serif;
+  padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 24px);
+  min-height:100vh;-webkit-user-select:none;user-select:none}
+input{-webkit-user-select:text;user-select:text}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+header{display:flex;align-items:center;justify-content:space-between;padding:4px 2px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:grid;place-items:center;color:#fff}
+.brand h1{font-size:20px;margin:0;font-weight:800}
+.brand p{margin:0;font-size:12px;color:var(--muted)}
+.iconbtn{width:40px;height:40px;border-radius:12px;border:0;background:var(--card);color:var(--muted);
+  display:grid;place-items:center;border:1px solid var(--line)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px}
+.row{display:flex;gap:8px}
+.field{flex:1;display:flex;align-items:center;background:var(--field);border:1px solid var(--line);
+  border-radius:14px;padding:0 6px 0 12px;min-width:0}
+.field input{flex:1;min-width:0;border:0;background:transparent;color:var(--text);font-size:16px;
+  padding:14px 4px;outline:none;direction:ltr;text-align:left}
+.field input::placeholder{direction:rtl;text-align:right;color:var(--muted)}
+.chip{border:0;background:var(--line);color:var(--text);font-size:13px;font-weight:700;
+  padding:8px 12px;border-radius:10px;white-space:nowrap}
+.btn{border:0;border-radius:14px;padding:14px 16px;font-size:16px;font-weight:800;color:#fff;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;
+  justify-content:center;gap:8px;width:100%}
+.btn:disabled{opacity:.55}
+.btn.ghost{background:var(--field);color:var(--text);border:1px solid var(--line)}
+.btn.audio{background:var(--audio)}
+.btn.small{padding:10px 12px;font-size:14px;width:auto}
+.hint{font-size:12px;color:var(--muted);margin:8px 2px 0;line-height:1.6}
+.hidden{display:none!important}
+.media{display:flex;gap:12px;align-items:flex-start}
+.thumb{width:110px;height:110px;border-radius:14px;object-fit:cover;background:var(--field);flex-shrink:0}
+.meta{min-width:0;flex:1}
+.meta h2{font-size:15px;line-height:1.5;margin:0 0 6px;font-weight:700;display:-webkit-box;
+  -webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:11px;font-weight:700;background:var(--field);color:var(--muted);padding:4px 8px;border-radius:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.progress{height:10px;background:var(--field);border-radius:99px;overflow:hidden;margin-top:10px}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .2s}
+.bar.indet{width:35%;animation:slide 1.2s infinite ease-in-out}
+@keyframes slide{0%{transform:translateX(120%)}100%{transform:translateX(-320%)}}
+.status{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-top:4px}
+.err{color:var(--danger);font-size:13px;font-weight:700;margin-top:10px;line-height:1.6}
+.sec-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.sec-title h3{margin:0;font-size:15px}
+.link{background:none;border:0;color:var(--danger);font-size:13px;font-weight:700}
+.hist{display:flex;flex-direction:column;gap:6px}
+.hitem{display:flex;align-items:center;gap:10px;padding:8px;border-radius:12px;background:var(--field);border:0;
+  color:var(--text);text-align:right;width:100%}
+.hitem img{width:44px;height:44px;border-radius:10px;object-fit:cover;background:var(--line);flex-shrink:0}
+.hitem div{min-width:0;flex:1}
+.hitem b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hitem small{font-size:11px;color:var(--muted)}
+.empty{font-size:13px;color:var(--muted);text-align:center;padding:10px}
+label{display:block;font-size:13px;font-weight:700;margin:10px 2px 6px}
+.spin{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;
+  animation:rot .8s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 20px);transform:translateX(-50%);
+  background:#0f172a;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;font-weight:700;
+  opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw;text-align:center;z-index:9}
+.toast.show{opacity:1}
+svg{width:20px;height:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></div>
+      <div><h1>صالحة فيديو</h1><p>تحميل فيديوهات التواصل الاجتماعي</p></div>
+    </div>
+    <button class="iconbtn" id="settingsBtn" aria-label="الإعدادات">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
+    </button>
+  </header>
+
+  <!-- الإعدادات -->
+  <section class="card hidden" id="setupCard">
+    <div class="sec-title"><h3>ربط المحرّك</h3></div>
+    <label for="serverInput">رابط الخادم (Hugging Face)</label>
+    <div class="field"><input id="serverInput" type="url" placeholder="https://اسمك-salha-video.hf.space" autocomplete="off" autocapitalize="off"></div>
+    <label for="keyInput">المفتاح السري (APP_KEY)</label>
+    <div class="field"><input id="keyInput" type="password" placeholder="المفتاح الذي وضعته في الخادم" autocomplete="off"></div>
+    <div class="grid2">
+      <button class="btn" id="saveSetup">حفظ واختبار</button>
+      <button class="btn ghost" id="cancelSetup">إغلاق</button>
+    </div>
+    <div class="err hidden" id="setupErr"></div>
+  </section>
+
+  <!-- الإدخال -->
+  <section class="card" id="inputCard">
+    <div class="row">
+      <div class="field">
+        <input id="urlInput" type="url" inputmode="url" placeholder="الصق رابط الفيديو هنا" autocomplete="off" autocapitalize="off" autocorrect="off">
+        <button class="chip" id="pasteBtn">لصق</button>
+      </div>
+    </div>
+    <div style="margin-top:10px"><button class="btn" id="fetchBtn"><span id="fetchLabel">جلب الفيديو</span></button></div>
+    <p class="hint">تيك توك • إنستغرام • X • فيسبوك • يوتيوب • وغيرها</p>
+    <div class="err hidden" id="fetchErr"></div>
+  </section>
+
+  <!-- النتيجة -->
+  <section class="card hidden" id="resultCard">
+    <div class="media">
+      <img class="thumb" id="thumb" alt="" referrerpolicy="no-referrer">
+      <div class="meta">
+        <h2 id="title"></h2>
+        <div class="tags" id="tags"></div>
+      </div>
+    </div>
+
+    <div class="grid2" id="dlButtons">
+      <button class="btn" id="dlVideo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/></svg>فيديو</button>
+      <button class="btn audio" id="dlAudio">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>صوت MP3</button>
+    </div>
+
+    <div class="hidden" id="progressBox">
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <div class="status"><span id="statusText"></span><span id="percent"></span></div>
+      <div style="margin-top:10px"><button class="btn ghost small" id="cancelBtn">إلغاء</button></div>
+    </div>
+
+    <div class="hidden" id="doneBox" style="margin-top:12px">
+      <button class="btn" id="saveBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
+        <span id="saveLabel">حفظ في الصور</span></button>
+      <p class="hint" id="saveHint">اضغط ثم اختر «حفظ الفيديو» (Save Video) من القائمة.</p>
+    </div>
+
+    <div class="err hidden" id="dlErr"></div>
+  </section>
+
+  <!-- السجل -->
+  <section class="card">
+    <div class="sec-title"><h3>آخر الفيديوهات</h3><button class="link" id="clearHist">مسح</button></div>
+    <div class="hist" id="hist"></div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); }catch{ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} }
+};
+
+let current = null;      // {url, title, thumbnail, ...}
+let readyFile = null;    // File جاهز للحفظ
+let controller = null;
+
+function toast(msg){
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2600);
+}
+function show(el, on){ $(el).classList.toggle('hidden', !on); }
+function setErr(el, msg){ $(el).textContent = msg || ''; show(el, !!msg); }
+
+function server(){ return (store.get('server', '') || '').replace(/\/+$/, ''); }
+function headers(){ const k = store.get('key', ''); return k ? { 'x-key': k } : {}; }
+
+async function apiError(res){
+  try{ const j = await res.json(); return j.detail || ('خطأ ' + res.status); }
+  catch{ return res.status === 503 || res.status === 502
+    ? 'الخادم يستيقظ من النوم… انتظر دقيقة وحاول مجدداً' : 'خطأ ' + res.status; }
+}
+
+function fmtDur(s){
+  if(!s) return '';
+  s = Math.round(s); const m = Math.floor(s/60), r = s%60;
+  return m + ':' + String(r).padStart(2,'0');
+}
+function fmtSize(b){ return b > 1048576 ? (b/1048576).toFixed(1) + ' MB' : Math.round(b/1024) + ' KB'; }
+
+// ===== الإعدادات =====
+function openSetup(){
+  $('serverInput').value = store.get('server', '');
+  $('keyInput').value = store.get('key', '');
+  setErr('setupErr'); show('setupCard', true);
+}
+$('settingsBtn').onclick = () => $('setupCard').classList.contains('hidden') ? openSetup() : show('setupCard', false);
+$('cancelSetup').onclick = () => show('setupCard', false);
+$('saveSetup').onclick = async () => {
+  let s = $('serverInput').value.trim().replace(/\/+$/, '');
+  if (s && !/^https?:\/\//.test(s)) s = 'https://' + s;
+  store.set('server', s); store.set('key', $('keyInput').value.trim());
+  setErr('setupErr');
+  const b = $('saveSetup'); b.disabled = true; b.textContent = 'جاري الاختبار…';
+  try{
+    const r = await fetch(s + '/', { cache: 'no-store' });
+    if(!r.ok) throw new Error(await apiError(r));
+    const j = await r.json();
+    if(!j.ok) throw new Error('الرابط لا يعود لمحرّك صالحة فيديو');
+    toast('تم الربط بنجاح ✓'); show('setupCard', false);
+  }catch(e){
+    setErr('setupErr', e.message === 'Failed to fetch' || e.message.includes('Load failed')
+      ? 'تعذّر الوصول للخادم. تأكد من الرابط وأن الـ Space يعمل (Running).' : e.message);
+  }finally{ b.disabled = false; b.textContent = 'حفظ واختبار'; }
+};
+
+// ===== اللصق والجلب =====
+$('pasteBtn').onclick = async () => {
+  try{
+    const t = (await navigator.clipboard.readText()).trim();
+    if(t){ $('urlInput').value = extractUrl(t); fetchInfo(); }
+    else toast('الحافظة فارغة');
+  }catch{ $('urlInput').focus(); toast('اضغط مطولاً داخل الحقل واختر لصق'); }
+};
+function extractUrl(t){ const m = t.match(/https?:\/\/\S+/); return m ? m[0] : t; }
+
+$('fetchBtn').onclick = fetchInfo;
+$('urlInput').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); fetchInfo(); } });
+
+async function fetchInfo(){
+  const url = extractUrl($('urlInput').value.trim());
+  $('urlInput').value = url;
+  setErr('fetchErr');
+  if(!/^https?:\/\//.test(url)) return setErr('fetchErr', 'الصق رابطاً صحيحاً يبدأ بـ https');
+  if(!server()){ openSetup(); return toast('اربط المحرّك أولاً'); }
+
+  const b = $('fetchBtn'); b.disabled = true;
+  $('fetchLabel').innerHTML = '<span class="spin"></span>';
+  const slow = setTimeout(() => { $('fetchLabel').textContent = 'الخادم يستيقظ… لحظات'; }, 6000);
+  try{
+    const r = await fetch(server() + '/api/info?url=' + encodeURIComponent(url), { headers: headers() });
+    if(!r.ok) throw new Error(await apiError(r));
+    const j = await r.json();
+    current = { ...j, url };
+    renderResult();
+    addHistory(current);
+  }catch(e){
+    setErr('fetchErr', /fetch|Load failed|NetworkError/i.test(e.message)
+      ? 'تعذّر الاتصال بالخادم. قد يكون نائماً — حاول بعد دقيقة.' : e.message);
+  }finally{
+    clearTimeout(slow); b.disabled = false; $('fetchLabel').textContent = 'جلب الفيديو';
+  }
+}
+
+function renderResult(){
+  readyFile = null;
+  $('thumb').src = current.thumbnail || '';
+  $('thumb').style.display = current.thumbnail ? '' : 'none';
+  $('title').textContent = current.title || 'فيديو';
+  const tags = $('tags'); tags.replaceChildren();
+  [current.platform, current.uploader && '@' + current.uploader.replace(/^@/, ''), fmtDur(current.duration)]
+    .filter(Boolean).forEach(t => { const s = document.createElement('span'); s.className = 'tag'; s.textContent = t; tags.append(s); });
+  show('resultCard', true); show('dlButtons', true); show('progressBox', false); show('doneBox', false); setErr('dlErr');
+  $('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ===== التحميل =====
+$('dlVideo').onclick = () => download('video');
+$('dlAudio').onclick = () => download('audio');
+$('cancelBtn').onclick = () => controller && controller.abort();
+
+async function download(type){
+  if(!current) return;
+  setErr('dlErr'); show('dlButtons', false); show('doneBox', false); show('progressBox', true); show('cancelBtn', true);
+  const bar = $('bar'); bar.style.width = ''; bar.classList.add('indet');
+  $('statusText').textContent = type === 'audio' ? 'الخادم يستخرج الصوت…' : 'الخادم يجهّز الفيديو…';
+  $('percent').textContent = '';
+  controller = new AbortController();
+  try{
+    const qs = '?type=' + type + '&url=' + encodeURIComponent(current.url);
+    const r = await fetch(server() + '/api/download' + qs, { headers: headers(), signal: controller.signal });
+    if(!r.ok) throw new Error(await apiError(r));
+
+    const total = +r.headers.get('Content-Length') || 0;
+    bar.classList.remove('indet');
+    $('statusText').textContent = 'جاري التنزيل إلى الآيفون…';
+    const reader = r.body.getReader(); const chunks = []; let got = 0;
+    for(;;){
+      const { done, value } = await reader.read();
+      if(done) break;
+      chunks.push(value); got += value.length;
+      if(total){ const p = Math.round(got / total * 100); bar.style.width = p + '%'; $('percent').textContent = p + '%'; }
+      else $('percent').textContent = fmtSize(got);
+    }
+    bar.style.transition = 'none'; bar.style.width = '100%';
+
+    const ext = type === 'audio' ? 'mp3' : 'mp4';
+    const mime = type === 'audio' ? 'audio/mpeg' : 'video/mp4';
+    const safe = (current.title || 'video').replace(/[\\/:*?"<>|#\n\r]+/g, ' ').trim().slice(0, 60) || 'video';
+    readyFile = new File(chunks, safe + '.' + ext, { type: mime });
+
+    $('statusText').textContent = 'جاهز ✓  ' + fmtSize(readyFile.size); $('percent').textContent = '';
+    show('cancelBtn', false);
+    $('saveLabel').textContent = type === 'audio' ? 'حفظ في الملفات' : 'حفظ في الصور';
+    $('saveHint').textContent = type === 'audio'
+      ? 'اضغط ثم اختر «حفظ في الملفات» (Save to Files).'
+      : 'اضغط ثم اختر «حفظ الفيديو» (Save Video) من القائمة.';
+    show('doneBox', true);
+  }catch(e){
+    show('progressBox', false); show('dlButtons', true);
+    if(e.name === 'AbortError') toast('تم الإلغاء');
+    else setErr('dlErr', /fetch|Load failed|NetworkError/i.test(e.message)
+      ? 'انقطع الاتصال أثناء التحميل. حاول مرة أخرى.' : e.message);
+  }finally{
+    controller = null; bar.style.transition = '';
+  }
+}
+
+// يجب أن يكون الحفظ بضغطة مباشرة من المستخدم (شرط iOS)
+$('saveBtn').onclick = async () => {
+  if(!readyFile) return;
+  if(navigator.canShare && navigator.canShare({ files: [readyFile] })){
+    try{ await navigator.share({ files: [readyFile] }); afterSave(); }
+    catch(e){ if(e.name !== 'AbortError') fallbackSave(); }
+  } else fallbackSave();
+};
+function fallbackSave(){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(readyFile); a.download = readyFile.name;
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+  afterSave();
+}
+function afterSave(){
+  toast('تم ✓');
+  show('doneBox', false); show('progressBox', false); show('dlButtons', true);
+}
+
+// ===== السجل =====
+function addHistory(item){
+  let h = store.get('history', []).filter(x => x.url !== item.url);
+  h.unshift({ url: item.url, title: item.title, thumbnail: item.thumbnail, platform: item.platform,
+    uploader: item.uploader, duration: item.duration, t: Date.now() });
+  store.set('history', h.slice(0, 15)); renderHistory();
+}
+function renderHistory(){
+  const box = $('hist'); box.replaceChildren();
+  const h = store.get('history', []);
+  if(!h.length){ const d = document.createElement('div'); d.className = 'empty'; d.textContent = 'لا يوجد شيء بعد'; box.append(d); return; }
+  h.forEach(item => {
+    const b = document.createElement('button'); b.className = 'hitem';
+    const img = document.createElement('img'); img.referrerPolicy = 'no-referrer'; img.alt = '';
+    if(item.thumbnail) img.src = item.thumbnail;
+    img.onerror = () => { img.removeAttribute('src'); };
+    const d = document.createElement('div');
+    const t = document.createElement('b'); t.textContent = item.title || item.url;
+    const s = document.createElement('small');
+    s.textContent = [item.platform, new Date(item.t).toLocaleDateString('ar', { day: 'numeric', month: 'short' })].filter(Boolean).join(' • ');
+    d.append(t, s); b.append(img, d);
+    b.onclick = () => { current = item; $('urlInput').value = item.url; renderResult(); };
+    box.append(b);
+  });
+}
+$('clearHist').onclick = () => { store.set('history', []); renderHistory(); };
+
+// ===== البدء =====
+renderHistory();
+if(!server()) openSetup();
+// دعم الفتح من اختصار iOS:  ...?url=رابط_الفيديو
+const shared = new URLSearchParams(location.search).get('url') || new URLSearchParams(location.search).get('text');
+if(shared){ $('urlInput').value = extractUrl(shared); history.replaceState(null, '', location.pathname); if(server()) fetchInfo(); }
+
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
