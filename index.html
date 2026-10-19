@@ -106,8 +106,8 @@ svg{width:20px;height:20px}
   <!-- الإعدادات -->
   <section class="card hidden" id="setupCard">
     <div class="sec-title"><h3>ربط المحرّك</h3></div>
-    <label for="serverInput">رابط الخادم (Hugging Face)</label>
-    <div class="field"><input id="serverInput" type="url" placeholder="https://اسمك-salha-video.hf.space" autocomplete="off" autocapitalize="off"></div>
+    <label for="serverInput">رابط الخادم (Render)</label>
+    <div class="field"><input id="serverInput" type="url" placeholder="https://salha-video.onrender.com" autocomplete="off" autocapitalize="off"></div>
     <label for="keyInput">المفتاح السري (APP_KEY)</label>
     <div class="field"><input id="keyInput" type="password" placeholder="المفتاح الذي وضعته في الخادم" autocomplete="off"></div>
     <div class="grid2">
@@ -228,7 +228,7 @@ $('saveSetup').onclick = async () => {
     toast('تم الربط بنجاح ✓'); show('setupCard', false);
   }catch(e){
     setErr('setupErr', e.message === 'Failed to fetch' || e.message.includes('Load failed')
-      ? 'تعذّر الوصول للخادم. تأكد من الرابط وأن الـ Space يعمل (Running).' : e.message);
+      ? 'تعذّر الوصول للخادم. تأكد من الرابط وأن الخادم يعمل على Render.' : e.message);
   }finally{ b.disabled = false; b.textContent = 'حفظ واختبار'; }
 };
 

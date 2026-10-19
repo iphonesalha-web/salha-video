@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 COPY --chown=user app.py .
 
 # تحديث yt-dlp عند كل تشغيل لأن المنصات تتغيّر باستمرار
-CMD pip install --no-cache-dir -q -U yt-dlp; uvicorn app:app --host 0.0.0.0 --port 7860
+CMD pip install --no-cache-dir -q -U yt-dlp; uvicorn app:app --host 0.0.0.0 --port ${PORT:-7860}

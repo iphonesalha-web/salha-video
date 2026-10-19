@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: salha-video
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    healthCheckPath: /
+    envVars:
+      - key: APP_KEY
+        sync: false

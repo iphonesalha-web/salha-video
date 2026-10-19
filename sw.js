@@ -1,4 +1,4 @@
-const CACHE = 'salha-video-v1';
+const CACHE = 'salha-video-v2';
 const SHELL = ['./', './index.html', './manifest.json', './icon-180.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
